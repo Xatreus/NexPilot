@@ -1,7 +1,8 @@
+import asyncio
 from unittest.mock import patch
 import pytest
 from app.models import PlanRequest
-from app.services import RepositoryInputError, deterministic_plan, parse_github_url
+from app.services import RepositoryInputError, create_plan, deterministic_plan, parse_github_url
 
 def test_parse_github_repository_url():
     assert parse_github_url("https://github.com/fastapi/fastapi") == ("fastapi", "fastapi")
@@ -23,10 +24,8 @@ def test_devops_task_includes_operational_readiness():
     plan = deterministic_plan(PlanRequest(task="Prepare CI/CD pipeline for production deployment"))
     assert any(step.category == "operate" for step in plan.steps)
 
-@pytest.mark.asyncio
-async def test_create_plan_falls_back_without_provider_key():
-    from app.services import create_plan
+def test_create_plan_falls_back_without_provider_key():
     with patch("app.services.get_settings") as settings:
         settings.return_value.openrouter_api_key = None
-        plan = await create_plan(PlanRequest(task="Add caching to the API response layer"))
+        plan = asyncio.run(create_plan(PlanRequest(task="Add caching to the API response layer")))
     assert plan.generated_by == "deterministic"
