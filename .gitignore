@@ -1,16 +1,38 @@
+# Environment variables and secrets
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python
 .venv/
 venv/
 __pycache__/
 *.py[cod]
+
+# Tests, lint and coverage
 .pytest_cache/
 .ruff_cache/
 .coverage
 htmlcov/
+
+# Build artifacts
 dist/
 build/
 *.egg-info/
+
+# Local application data
 data/
 *.db
+*.sqlite
+*.sqlite3
+
+# Local design notes
 engineering-design.md
+
+# Editor and OS files
+.vscode/
+.idea/
 .DS_Store
+Thumbs.db
